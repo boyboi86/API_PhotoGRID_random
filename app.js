@@ -15,6 +15,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 /*Set some global variables to make work slightly easier */
 app.set('port', process.env.PORT || 3000);
 app.set('host', config.host);
+
 let knoxClient = knox.createClient({
   key: config.S3AccessKey,
   secret: config.S3Secret,
@@ -32,5 +33,3 @@ const io = require('socket.io')(server);
 server.listen(port, err => {
   err? console.log('err connecting to server', err): console.log(`server connect to ${port}`);
 });
-
-module.exports = app;
