@@ -5,3 +5,7 @@ node_modules
 ## All log files as well
 
 *.log
+
+## the entire config folder
+
+config/
