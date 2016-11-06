@@ -3,11 +3,44 @@
 <head>
 	<meta charset="UTF-8">
 	<title>PhotoGrid</title>
-	<link rel="stylesheet" href="../public/css/main.css">
+	<link rel="stylesheet" href="../css/main.css">
 	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-	<script src="../public/js/photogrid_utils.js"></script>
+	<script src="../js/photogrid_utils.js"></script>
+	<script>
+		$(() => {
+				let host = '{{host}}'
+				$(document).on('click', '#doUpload', () => {
+					uploadNow()
+				});
 
-
+				let uploadNow = () => {
+					$('.progress').fadeIn(100);
+					let uploadURL = host + '/upload';
+					let uploadFile = $('.uploadPic');
+					if(upload.val() != '') {
+						/*This is instantiate a new form object*/
+						let form = new FormData();
+						form.append("upload", uploadFile[0].files[0]);
+						/* Perform AJAX post request and send the file, this ajax was modified to reflect the progress*/
+						ajax({
+							method: 'post',
+							url: uploadURL,
+							success: () => {
+								$('.progress').fadeOut(200);
+								uploadFile.val();
+							},
+							progress: e => {
+								if(e.lengthComputable){
+									let perc = Math.round((e.load * 100) / e.total);
+									$('.progress').css('width', `${perc} %`)
+								}
+							},
+							payload: form
+						})
+					}
+				}
+		})
+	</script>
 </head>
 <body>
 	<div class="container">
@@ -27,7 +60,7 @@
 		<div class="gallery">
 			<ul>
 				<!-- Repeat the following <li> structure for every image -->
-				<!-- <li>
+				<li>
 					<div class="overlay">
 					<div class="voteCtrl">
 						<a href="#" class="voteUp">
@@ -39,7 +72,7 @@
 					<div class="imageHolder">
 						<img src="../images/someimage.jpg" alt="">
 					</div>
-				</li> -->
+				</li>
 				<!-- End Repeat -->
 
 
