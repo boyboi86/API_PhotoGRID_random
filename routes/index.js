@@ -1,14 +1,14 @@
 'use strict';
 const express = require('express');
 const router = express.Router();
-const app = require('../app');
+const config = require('../config');
 const fs = require('fs');
 const os = require('os');
 const formidable = require('formidable');
 
   router.get('/', (req, res, next) => {
     res.render('index', {
-      host: app.get('host')
+      host: config.host
     });
   });
 /*To match index.html with an ajax post method, formidable is a low level package*/
