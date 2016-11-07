@@ -80,5 +80,11 @@ io.on('connection', socket => {
       })
     })
   })
+router.get('/getimage', (req, res, next) => {
+  singleImageModel.find({}).exec((err, result) => {
+    res.send(JSON.stringify(result))
+  })
+})
+
 app.use('/', router);
 }
