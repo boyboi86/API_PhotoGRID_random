@@ -1,9 +1,14 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const router = require('./routes');
 const config = require('./config');
 const knox = require('knox');
+const fs = require('fs');
+const os = require('os');
+const gm = require('gm');
+const singleImageModel = require('./db');
+const formidable = require('formidable');
+const mongoose = require('mongoose').connect(config.dbURL);
 
 
 app.set('views', path.join(__dirname, 'views'));
@@ -24,11 +29,12 @@ let knoxClient = knox.createClient({
 
 let port = app.get('port');
 
-app.use('/', router);
-
 /* 2 layers of transport, if socket long polling stop, app can fall back to http*/
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
+
+/*Invoke function and pass in every import to that function */
+require('./routes')(express, app, formidable, fs, os, gm, knoxClient, mongoose, io, singleImageModel);
 
 server.listen(port, err => {
   err? console.log('err connecting to server', err): console.log(`server connect to ${port}`);
