@@ -5,19 +5,31 @@
 	<title>PhotoGrid</title>
 	<link rel="stylesheet" href="../css/main.css">
 	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
 	<script src="../js/photogrid_utils.js"></script>
 	<script>
 		$(() => {
+				/*Inject from res.render */
 				let host = '{{host}}'
 				$(document).on('click', '#doUpload', () => {
 					uploadNow()
 				});
+				/*Set up pipeline*/
+				let socket = io(host);
+				/* Event 'status' emitted from server once upload is successful */
+				socket.on('status', data => {
+					showStatus(data.msg, data.relay);
+				})
+				/* Event 'updateList' emitted from server once upload is successful*/
+				socket.on('doUpdate', () => {
+					renderList()
+				})
 
 				let uploadNow = () => {
 					$('.progress').fadeIn(100);
 					let uploadURL = host + '/upload';
 					let uploadFile = $('.uploadPic');
-					if(upload.val() != '') {
+					if(uploadFile.val() != '') {
 						/*This is instantiate a new form object*/
 						let form = new FormData();
 						form.append("upload", uploadFile[0].files[0]);
@@ -32,7 +44,7 @@
 							progress: e => {
 								if(e.lengthComputable){
 									let perc = Math.round((e.load * 100) / e.total);
-									$('.progress').css('width', `${perc} %`)
+									$('.progress').css('width', perc + '%')
 								}
 							},
 							payload: form
