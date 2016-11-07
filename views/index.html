@@ -25,6 +25,38 @@
 					renderList()
 				})
 
+				let renderList = () => {
+					/* If html('') is not invoked, gallery will keep stacking so you will have dupicate images */
+					$('.gallery ul').html('');
+					ajax({
+						url: host + '/getimage',
+						success: data => {
+							let imageList = JSON.parse(data.response);
+							/*use Classic ajax method += to render new list*/
+							for(i = 0; i < imageList.length; i++){
+								let str = '<li>'
+								str += '<div class="overlay">';
+								str += '<div class="voteCtrl">';
+								str += '<a href="#" data-photoid="' + imageList[i]._id + '" class="voteUp">';
+								str += '<img src="../images/voteup.png" alt="Click Here to Vote Up !">';
+								str += '<h4>' + imageList[i].votes + '</h4>';
+								str += '</a>';
+								str += '</div>';
+								str += '</div>';
+								str += '<div class="imageHolder">';
+								/*Set up CDN on AWS*/
+								str += '<img src="http://dy9zyp9oiaxxg.cloudfront.net/'+ imageList[i].filename + '" alt="">';
+								str += '</div>';
+								str += '</li>';
+
+								$('.gallery ul').append(str);
+							}
+						}
+					})
+				}
+
+				renderList();
+
 				let uploadNow = () => {
 					$('.progress').fadeIn(100);
 					let uploadURL = host + '/upload';
@@ -43,8 +75,8 @@
 							},
 							progress: e => {
 								if(e.lengthComputable){
-									let perc = Math.round((e.load * 100) / e.total);
-									$('.progress').css('width', perc + '%')
+									let perc = Math.round((e.loaded * 100) / e.total);
+									$('.progress').css('width', (perc + '%'));
 								}
 							},
 							payload: form
@@ -72,19 +104,7 @@
 		<div class="gallery">
 			<ul>
 				<!-- Repeat the following <li> structure for every image -->
-				<li>
-					<div class="overlay">
-					<div class="voteCtrl">
-						<a href="#" class="voteUp">
-							<img src="../images/voteup.png" alt="Click Here to Vote Up !">
-							<h4>100</h4>
-						</a>
-					</div>
-					</div>
-					<div class="imageHolder">
-						<img src="../images/someimage.jpg" alt="">
-					</div>
-				</li>
+
 				<!-- End Repeat -->
 
 
