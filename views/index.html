@@ -26,6 +26,8 @@
 				})
 
 				let renderList = () => {
+					/*Once form submit clear input field*/
+					$('.uploadPic').val('');
 					/* If html('') is not invoked, gallery will keep stacking so you will have dupicate images */
 					$('.gallery ul').html('');
 					ajax({
