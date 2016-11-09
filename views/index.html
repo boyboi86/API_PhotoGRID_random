@@ -85,6 +85,19 @@
 						})
 					}
 				}
+				/*We need to use 'this' so no fat arrow*/
+				$(document).on('click', '.voteUp', function(e){
+					/*basically we are already pointing to the like sign but only to use it in a callback*/
+					let that = $(this);
+					ajax({
+						url: host + '/voteup/' + that.data('photoid'),
+						success: function(data){
+							let parseData = JSON.parse(data.response);
+							that.find('h4').html(parseData.votes);
+						}
+					})
+				})
+
 		})
 	</script>
 </head>
