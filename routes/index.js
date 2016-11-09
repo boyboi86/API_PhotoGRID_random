@@ -81,8 +81,13 @@ io.on('connection', socket => {
     })
   })
 router.get('/getimage', (req, res, next) => {
-  singleImageModel.find({}).exec((err, result) => {
+  singleImageModel.find({}, null, {sort: {votes: -1}}).exec((err, result) => {
     res.send(JSON.stringify(result))
+  })
+})
+router.get('/voteup/:id', (req, res, next) => {
+  singleImageModel.findByIdAndUpdate(req.params.id, {$inc: {votes: 1}}).exec((err, result) => {
+    err? console.log('voting err', err): res.status(200).send({votes: result.votes});
   })
 })
 
